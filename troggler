@@ -1,0 +1,9 @@
+# !/bin/bash
+
+trackpadName="Elantech Touchpad" #Modify this to whatever the name of the trackpad is. Can be read from output of the xinput command.
+
+mouseIdNumber=$(xinput | grep "$trackpadName" | sed 's/.*id=\([0-9]*\).*/\1/') #replace entire string with numbers following id=, leaving only the id num
+
+mouseState=$(xinput --list-props $mouseIdNumber | grep "Device Enabled" | sed 's/([0-9]*)//g' | sed 's/[^0-9]//g') #similar regex logic to above. equal to 1 when device enabled, 0 when not
+
+xinput set-prop $mouseIdNumber "Device Enabled" $(($mouseState ^ 1)) #Get state mouse is NOT in
